@@ -1,0 +1,57 @@
+Description: Fix build with glibc >= 2.33 (_STAT_VER removed from public headers)
+ glibc 2.33 removed _STAT_VER and the __xstat/__lxstat/__fxstat family
+ from public headers (they were internal glibc implementation details).
+ fakeroot 1.20.2 relies on these, causing build failures on modern hosts.
+ .
+ Fix by defining _STAT_VER when not already defined, using the correct
+ value per architecture (matches glibc internal stat_ver_linux.h):
+   aarch64 / x86_64 / riscv64 -> 1
+   ARM 32-bit / x86 / others  -> 3
+ .
+ Also fix the fts_read/fts_children warnings: glibc 2.33 changed
+ fts_statp type from struct stat64 * to struct stat *, so add a cast.
+Author: Buildroot community
+Forwarded: no
+Last-Update: 2024-01-01
+
+--- a/libfakeroot.c
++++ b/libfakeroot.c
+@@ -91,6 +91,18 @@
+ #endif
+ 
+ /*
++ * glibc >= 2.33 removed _STAT_VER from public headers.
++ * Define it here using the architecture-appropriate value.
++ */
++#ifndef _STAT_VER
++# if defined(__aarch64__) || defined(__x86_64__) || defined(__riscv)
++#  define _STAT_VER 1
++# else
++#  define _STAT_VER 3
++# endif
++#endif
++
++/*
+    These INT_* (which stands for internal) macros should always be used when
+    the fakeroot library owns the storage of the stat variable.
+ */
+@@ -1950,7 +1962,8 @@
+     r->fts_statp = NULL;  /* Otherwise fts_statp may be a random pointer */
+   if(r && r->fts_statp) {  /* Should we bother checking fts_info here? */
+ # if defined(STAT64_SUPPORT) && !defined(__APPLE__)
+-    SEND_GET_STAT64(r->fts_statp, _STAT_VER);
++    send_get_stat64((struct stat64 *)r->fts_statp);
++    SEND_GET_STAT(r->fts_statp, _STAT_VER);
+ # else
+     SEND_GET_STAT(r->fts_statp, _STAT_VER);
+ # endif
+@@ -1973,7 +1986,8 @@
+   for(r = first; r; r = r->fts_link) {
+     if(r && r->fts_statp) {  /* Should we bother checking fts_info here? */
+ # if defined(STAT64_SUPPORT) && !defined(__APPLE__)
+-      SEND_GET_STAT64(r->fts_statp, _STAT_VER);
++      send_get_stat64((struct stat64 *)r->fts_statp);
++      SEND_GET_STAT(r->fts_statp, _STAT_VER);
+ # else
+       SEND_GET_STAT(r->fts_statp, _STAT_VER);
+ # endif

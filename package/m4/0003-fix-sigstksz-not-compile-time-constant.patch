@@ -1,0 +1,23 @@
+Description: Fix build with Linux kernel >= 5.14 (SIGSTKSZ no longer compile-time constant)
+ Since Linux kernel 5.14, SIGSTKSZ is no longer a compile-time constant —
+ it calls getauxval() at runtime. This means it cannot be used in #elif
+ preprocessor expressions in c-stack.c.
+ .
+ The condition guarded against a libsigsegv 2.6-2.8 bug where some
+ architectures use more than 8k of alternate stack space. The safe fix is
+ to always apply the 16384 floor unconditionally when HAVE_LIBSIGSEGV is
+ set, which removes the non-constant SIGSTKSZ from the preprocessor test.
+Author: Buildroot community
+Forwarded: no
+Last-Update: 2024-01-01
+
+--- a/lib/c-stack.c
++++ b/lib/c-stack.c
+@@ -52,7 +52,7 @@
+ #ifndef SIGSTKSZ
+ # define SIGSTKSZ 16384
+-#elif HAVE_LIBSIGSEGV && SIGSTKSZ < 16384
++#elif HAVE_LIBSIGSEGV
+ /* libsigsegv 2.6 through 2.8 have a bug where some architectures use
+    more than the Linux default of an 8k alternate stack when deciding
+    if a fault was caused by stack overflow.  */

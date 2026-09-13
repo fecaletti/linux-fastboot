@@ -1,0 +1,18 @@
+# Force HDMI hotplug and mode
+hdmi_force_hotplug=1
+hdmi_drive=2
+
+#--> Boot
+kernel=kernel.img
+gpu_mem=64
+disable_overscan=1
+boot_delay=0
+enable_uart=1
+disable_splash=1
+
+#--> OverClock (uncomment to enable)
+# The RPi Zero W can be clocked up to ~1000MHz safely with adequate cooling.
+#arm_freq=1000
+#core_freq=400
+#sdram_freq=500
+#over_voltage=2

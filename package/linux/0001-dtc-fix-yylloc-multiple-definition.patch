@@ -1,0 +1,17 @@
+Description: Fix build with GCC >= 10 (-fno-common default) in dtc scripts
+ GCC 10 changed default from -fcommon to -fno-common.
+ In scripts/dtc/dtc-lexer.lex.c_shipped, yylloc is defined globally while
+ scripts/dtc/dtc-parser.tab.c_shipped also defines it, leading to a multiple
+ definition error during host dtc compilation.
+ Change yylloc in dtc-lexer.lex.c_shipped to extern.
+
+--- a/scripts/dtc/dtc-lexer.lex.c_shipped
++++ b/scripts/dtc/dtc-lexer.lex.c_shipped
+@@ -631,7 +631,7 @@
+ #include "dtc-parser.tab.h"
+
+-YYLTYPE yylloc;
++extern YYLTYPE yylloc;
+
+ extern bool treesource_error;
+
