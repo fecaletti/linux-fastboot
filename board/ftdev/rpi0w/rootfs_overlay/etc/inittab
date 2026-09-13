@@ -1,0 +1,31 @@
+# /etc/inittab - Fast Boot for Raspberry Pi Zero W
+
+# Filesystem setup
+::sysinit:/bin/mount -t proc proc /proc
+::sysinit:/bin/mount -t sysfs sysfs /sys
+::sysinit:/bin/mount -t devtmpfs devtmpfs /dev 2>/dev/null || true
+::sysinit:/bin/mount -o remount,rw /
+::sysinit:/bin/mkdir -p /dev/pts /dev/shm
+::sysinit:/bin/mount -a
+null::sysinit:/bin/ln -sf /proc/self/fd /dev/fd
+null::sysinit:/bin/ln -sf /proc/self/fd/0 /dev/stdin
+null::sysinit:/bin/ln -sf /proc/self/fd/1 /dev/stdout
+null::sysinit:/bin/ln -sf /proc/self/fd/2 /dev/stderr
+::sysinit:/bin/hostname -F /etc/hostname
+
+# Fix permissions on /dev nodes
+::sysinit:/bin/chmod 755 /dev
+::sysinit:/bin/chmod 666 /dev/tty* /dev/console /dev/null 2>/dev/null || true
+
+# Welcome Banner
+::sysinit:/bin/echo ""
+::sysinit:/bin/echo "========================================="
+::sysinit:/bin/echo "  Raspberry Pi Zero W - Fast Boot Ready  "
+::sysinit:/bin/echo "========================================="
+::sysinit:/bin/echo ""
+
+# Direct interactive shell on console (uses init's active controlling tty)
+::respawn:/bin/sh
+
+# Shutdown cleanup
+::shutdown:/bin/umount -a -r
