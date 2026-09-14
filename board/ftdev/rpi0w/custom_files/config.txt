@@ -10,9 +10,12 @@ boot_delay=0
 enable_uart=1
 disable_splash=1
 
-#--> OverClock (uncomment to enable)
-# The RPi Zero W can be clocked up to ~1000MHz safely with adequate cooling.
-#arm_freq=1000
-#core_freq=400
-#sdram_freq=500
-#over_voltage=2
+#--> SPI Display (3.5" ILI9486 + ADS7846 Touch)
+dtparam=spi=on
+dtoverlay=tft35a:rotate=90,speed=24000000,fps=30
+
+#--> Clock & Performance for maximum SPI throughput
+# Locking core_freq stabilizes the BCM2835 SPI clock divider for 48MHz+ transfers
+core_freq=400
+arm_freq=1000
+

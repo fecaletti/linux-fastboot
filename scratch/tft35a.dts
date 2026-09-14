@@ -1,0 +1,85 @@
+ {
+  compatible = [6272636d2c62636d32383335006272636d2c62636d32373038006272636d2c62636d3237303900];
+  fragment@0 {
+    target = <0xdeadbeef>;
+    __overlay__ {
+      status = "okay";
+      spidev@0 {
+        status = "disabled";
+      };
+      spidev@1 {
+        status = "disabled";
+      };
+    };
+  };
+  fragment@1 {
+    target = <0xdeadbeef>;
+    __overlay__ {
+      tft35a_pins {
+        brcm,pins = <0x11 0x19 0x18>;
+        brcm,function = <0x0 0x0 0x0>;
+        linux,phandle = <0x1>;
+        phandle = <0x1>;
+      };
+    };
+  };
+  fragment@2 {
+    target = <0xdeadbeef>;
+    __overlay__ {
+      #address-cells = <0x1>;
+      #size-cells = <0x0>;
+      tft35a@0 {
+        compatible = "ilitek,ili9486";
+        reg = <0x0>;
+        pinctrl-names = "default";
+        pinctrl-0 = <0x1>;
+        spi-max-frequency = <0xf42400>;
+        txbuflen = <0x8000>;
+        rotate = <0x5a>;
+        bgr = <0x0>;
+        fps = <0x1e>;
+        buswidth = <0x8>;
+        regwidth = <0x10>;
+        reset-gpios = <0xdeadbeef 0x19 0x1>;
+        dc-gpios = <0xdeadbeef 0x18 0x0>;
+        debug = <0x0>;
+        init = <0x10000f1 0x36 0x4 0x0 0x3c 0xf 0x8f 0x10000f2 0x18 0xa3 0x12 0x2 0xb2 0x12 0xff 0x10 0x0 0x10000f8 0x21 0x4 0x10000f9 0x0 0x8 0x1000036 0x8 0x10000b4 0x0 0x10000c1 0x41 0x10000c5 0x0 0x91 0x80 0x0 0x10000e0 0xf 0x1f 0x1c 0xc 0xf 0x8 0x48 0x98 0x37 0xa 0x13 0x4 0x11 0xd 0x0 0x10000e1 0xf 0x32 0x2e 0xb 0xd 0x5 0x47 0x75 0x37 0x6 0x10 0x3 0x24 0x20 0x0 0x100003a 0x55 0x1000011 0x1000036 0x28 0x20000ff 0x1000029>;
+        linux,phandle = <0x2>;
+        phandle = <0x2>;
+      };
+      tft35a-ts@1 {
+        compatible = "ti,ads7846";
+        reg = <0x1>;
+        spi-max-frequency = <0x1e8480>;
+        interrupts = <0x11 0x2>;
+        interrupt-parent = <0xdeadbeef>;
+        pendown-gpio = <0xdeadbeef 0x11 0x1>;
+        ti,x-plate-ohms = [003c];
+        ti,pressure-max = [00ff];
+        linux,phandle = <0x3>;
+        phandle = <0x3>;
+      };
+    };
+  };
+  __overrides__ {
+    speed = <0x2 0x7370692d 0x6d61782d 0x66726571 0x75656e63 0x793a3000>;
+    txbuflen = [0000000274786275666c656e3a3000];
+    rotate = [00000002726f746174653a3000];
+    fps = [000000026670733a3000];
+    bgr = [000000026267723a3000];
+    debug = <0x2 0x64656275 0x673a3000>;
+    swapxy = <0x3 0x74692c73 0x7761702d 0x78793f00>;
+  };
+  __symbols__ {
+    tft35a_pins = "/fragment@1/__overlay__/tft35a_pins";
+    tft35a = "/fragment@2/__overlay__/tft35a@0";
+    tft35a_ts = "/fragment@2/__overlay__/tft35a-ts@1";
+  };
+  __fixups__ {
+    spi0 = [2f667261676d656e7440303a7461726765743a30002f667261676d656e7440323a7461726765743a3000];
+    gpio = [2f667261676d656e7440313a7461726765743a30002f667261676d656e7440322f5f5f6f7665726c61795f5f2f74667433356140303a72657365742d6770696f733a30002f667261676d656e7440322f5f5f6f7665726c61795f5f2f74667433356140303a64632d6770696f733a30002f667261676d656e7440322f5f5f6f7665726c61795f5f2f7466743335612d747340313a696e746572727570742d706172656e743a30002f667261676d656e7440322f5f5f6f7665726c61795f5f2f7466743335612d747340313a70656e646f776e2d6770696f3a3000];
+  };
+  __local_fixups__ {
+    fixup = [2f667261676d656e7440322f5f5f6f7665726c61795f5f2f74667433356140303a70696e6374726c2d303a30002f5f5f6f76657272696465735f5f3a73706565643a30002f5f5f6f76657272696465735f5f3a74786275666c656e3a30002f5f5f6f76657272696465735f5f3a726f746174653a30002f5f5f6f76657272696465735f5f3a6670733a30002f5f5f6f76657272696465735f5f3a6267723a30002f5f5f6f76657272696465735f5f3a64656275673a30002f5f5f6f76657272696465735f5f3a7377617078793a3000];
+  };
+};

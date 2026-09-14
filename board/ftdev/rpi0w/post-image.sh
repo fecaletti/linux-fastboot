@@ -41,6 +41,12 @@ cp "${DTB_FILE}"        "${CUSTOM_OUTPUT_DIR}/bcm2708-rpi-0-w.dtb"
 cp "${BINARIES_DIR}/zImage" "${CUSTOM_OUTPUT_DIR}/kernel.img"
 cp "${BINARIES_DIR}/zImage" "${CUSTOM_OUTPUT_DIR}/zImage"
 
+# Copy device tree overlays (e.g. SPI display overlays)
+mkdir -p "${CUSTOM_OUTPUT_DIR}/overlays"
+if [ -d "${BOARD_DIR}/custom_files/overlays" ]; then
+    cp -r "${BOARD_DIR}/custom_files/overlays/"* "${CUSTOM_OUTPUT_DIR}/overlays/" 2>/dev/null || true
+fi
+
 echo "Fastboot files are ready."
 
 
